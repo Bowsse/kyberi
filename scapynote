@@ -40,14 +40,44 @@ packet=Raw(packet[0])
 packet.hexraw()
 
 
-
-
-
-
-
-
 wireshark
 >>> packets = Ether()/IP(dst=Net("google.com/30"))/ICMP()     # first generate some packets
 >>> wireshark(packets) 
+
+
+
+**********************************
+MitM
+
+
+ARP
+
+
+PCAP Processing
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

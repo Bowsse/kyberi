@@ -1,0 +1,10 @@
+sudo pip install numpy
+
+sudo pip install scipy
+
+sudo yum install opencv-python
+
+
+pip3 install matplotlib or apt-get install python3-matplotlib
+
+apt-get install python-opencv
