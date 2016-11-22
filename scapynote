@@ -1,0 +1,19 @@
+$ cd /tmp
+$ wget http://www.secdev.org/projects/scapy/files/scapy-2.3.1.zip
+$ unzip scapy-2.3.1.zip
+$ cd scapy-2.3.1.zip
+$ sudo python setup.py install
+
+scapy v2.3.1
+
+python v2.7.11-2
+
+
+ans,unans = *KOMENTO*
+
+ans,unans = sr(IP(dst=["kohde1", "kohde2"])/TCP(dport=[22,80,443],flags="S"))
+
+scapy table = 
+
+ans.make_table(lambda(s,r): (s.dst, s.dport, r.sprintf("{TCP:%TCP.flags%}{ICMP:%IP.src% - %ICMP.type%}")))
+
