@@ -17,3 +17,28 @@ scapy table =
 
 ans.make_table(lambda(s,r): (s.dst, s.dport, r.sprintf("{TCP:%TCP.flags%}{ICMP:%IP.src% - %ICMP.type%}")))
 
+
+
+pkts = sniff(iface="eth0", count=1, prn=lambda x: x.show())
+
+wrpcap("temp.cap",pkts)
+
+packet=rdpcap("temp.cap") 
+
+packet.hexdump()
+
+packet=Raw(packet[0])  packet.hexraw()
+
+
+
+
+
+
+
+
+
+wireshark
+>>> packets = Ether()/IP(dst=Net("google.com/30"))/ICMP()     # first generate some packets
+>>> wireshark(packets) 
+
+
