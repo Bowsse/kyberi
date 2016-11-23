@@ -4,10 +4,10 @@ import cv2
 
 from scapy.all import *
 
-pictures_directory = "/root/Semi"
-faces_directory    = "/root/Semi"
+pictures_directory = "/root/Semi/kyberi/kuvat"
+faces_directory    = "/root/Semi/kyberi/kuvat"
 pcap_file          = "cappi.cap"
-packet_count       = 70
+packet_count       = 400
 
 
 
@@ -59,15 +59,15 @@ def get_http_headers(http_payload):
 	return headers
 
 def extract_image(headers,http_payload):
-        print "extract_image called"	
+        print headers	
 	image      = None
 	image_type = None
 	
 	try:
-		if "image" in headers['Content-type']:
+		if "image" in headers['Content-Type']:
 			
 			# grab the image type and image body
-			image_type = headers['Content-type'].split("/")[1]
+			image_type = headers['Content-Type'].split("/")[1]
 		        print image_type
 			image = http_payload[http_payload.index("\r\n\r\n")+4:]
 		
@@ -79,9 +79,32 @@ def extract_image(headers,http_payload):
 					elif headers['Content-Encoding'] == "deflate":
 						image = zlib.decompress(image)
 			except:
-				pass	
+				pass
+		
 	except:
-		return None,None
+		print "f"
+        
+        try:
+
+               	if "image" in headers['Content-type']:
+			
+			# grab the image type and image body
+			image_type = headers['Content-type'].split("/")[1]
+		        print image_type
+			image = http_payload[http_payload.index("\r\n\r\n")+4:]
+		
+			# if we detect compression decompress the image
+			try:
+				if "Content-encoding" in headers.keys():
+					if headers['Content-encoding'] == "gzip":
+						image = zlib.decompress(image,16+zlib.MAX_WBITS)
+					elif headers['Content-encoding'] == "deflate":
+						image = zlib.decompress(image)
+                        except:
+			        pass
+	except:
+		print "g"
+      
 	
 	return image,image_type
 
@@ -103,7 +126,7 @@ def http_assembler(pcap_file):
 		for packet in sessions[session]:
 	
 			try:
-				if packet[TCP].dport > 35000 or packet[TCP].sport == 8000:
+				if packet[TCP].dport == 80 or packet[TCP].sport == 80:
 	                                   
 					# reassemble the stream into a single buffer
 					http_payload += str(packet[TCP].payload)
@@ -130,7 +153,6 @@ def http_assembler(pcap_file):
 			
 			carved_images += 1
 			
-                        print "attempting face detection"
 			# now attempt face detection
 			try:
 				result = face_detect("%s/%s" % (pictures_directory,file_name),file_name)
@@ -146,5 +168,4 @@ def http_assembler(pcap_file):
 if sniff_packets(packet_count) is True:
         carved_images, faces_detected = http_assembler(pcap_file)
 
-print "Extracted: %d images" % carved_images
-print "Detected: %d faces" % faces_detected
+print "Tallennettu %d kuvaa" % carved_images

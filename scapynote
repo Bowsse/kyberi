@@ -16,6 +16,8 @@ arp cache poisoning
 
 pcap processing ja face detecting
 
+sniff(prn=lambda x:x.sprintf("%IP.src%:%TCP.sport% -> %IP.dst%:%TCP.dport%"))
+
 
 ans,unans = *KOMENTO*
 
